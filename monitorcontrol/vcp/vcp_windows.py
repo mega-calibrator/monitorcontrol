@@ -195,7 +195,7 @@ if sys.platform == "win32":
             """
             self.logger.debug("SaveCurrentSettingsCommand")
             try:
-                if not ctypes.windll.dxva2.SaveCurrentMonitorSettings(
+                if not ctypes.windll.dxva2.SaveCurrentSettings(
                     HANDLE(self.handle)
                 ):
                     raise VCPError(
