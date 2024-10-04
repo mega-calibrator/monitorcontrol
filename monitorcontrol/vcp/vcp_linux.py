@@ -305,7 +305,7 @@ class LinuxVCP(VCP):
 
         return caps_str
 
-    def set_vcp_feature(self, code: int, value: int):
+    def save_current_settings(self):
         """
         Saves the current settings to monitor NVRAM.
 
