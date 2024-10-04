@@ -29,7 +29,6 @@ class LinuxVCP(VCP):
     GET_VCP_CMD = 0x01  # get VCP feature command
     GET_VCP_REPLY = 0x02  # get VCP feature reply code
     SET_VCP_CMD = 0x03  # set VCP feature command
-    SCS_CMD = 0x0C  # save current settings command
     GET_VCP_CAPS_CMD = 0xF3  # Capabilities Request command
     GET_VCP_CAPS_REPLY = 0xE3  # Capabilities Request reply
 
@@ -304,33 +303,6 @@ class LinuxVCP(VCP):
             raise VCPIOError("Capabilities string incomplete or too long")
 
         return caps_str
-
-    def save_current_settings(self):
-        """
-        Saves the current settings to monitor NVRAM.
-
-        Raises:
-            VCPIOError: failed to set VCP feature
-        """
-        self.rate_limt()
-
-        # transmission data
-        data = bytearray()
-        data.append(self.SCS_CMD)
-
-        # add headers and footers
-        data.insert(0, (len(data) | self.PROTOCOL_FLAG))
-        data.insert(0, self.HOST_ADDRESS)
-        data.append(self.get_checksum(bytearray([self.DDCCI_ADDR << 1]) + data))
-
-        # write data
-        self.logger.debug("data=" + " ".join([f"{x:02X}" for x in data]))
-        self.write_bytes(data)
-
-        # store time of last set VCP
-        self.last_set = time.time()
-
-        time.sleep(0.2)
 
     @staticmethod
     def get_checksum(data: bytearray) -> int:
